@@ -113,6 +113,10 @@ Use the shared MCP files when you want one setup to work across hosts, and Pi-ow
 | `<Pi agent dir>/mcp.json` | Pi global override and compatibility imports (`~/.pi/agent/mcp.json` by default) |
 | `.pi/mcp.json` | Pi project override |
 
+For local stdio servers, leading `~/` and `~\\` are expanded to the current
+user's home directory in `command`, `args`, and `cwd`. Bare commands such as
+`node`, `bunx`, or `git` continue to resolve through `PATH`.
+
 Pi-specific files are the write targets for imported or shared global servers when Pi needs to persist adapter-only settings such as `directTools`.
 
 ### Agent Plugins

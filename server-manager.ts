@@ -1044,10 +1044,13 @@ export class McpServerManager {
 
     if (definition.command) {
       client = this.createClient(name, definition);
-      let command = definition.command;
+      let command = resolveConfigPath(definition.command) ?? definition.command;
       const literalArgs = isBuiltInAgentPlugin(definition, "args");
       const literalCwd = isBuiltInAgentPlugin(definition, "cwd");
-      let args = literalArgs ? [...(definition.args ?? [])] : (definition.args ?? []).map((argument) => interpolateEnvVars(argument));
+      let args = literalArgs
+        ? [...(definition.args ?? [])]
+        : (definition.args ?? []).map((argument) => interpolateEnvVars(argument));
+      args = args.map((argument) => resolveConfigPath(argument) ?? argument);
       const cwd = (literalCwd ? definition.cwd : resolveConfigPath(definition.cwd)) ?? this.defaultCwd;
       if (definition.pluginDataDir) mkdirSync(definition.pluginDataDir, { recursive: true });
       if (cwd !== undefined) {
