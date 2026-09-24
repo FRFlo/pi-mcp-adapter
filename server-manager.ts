@@ -63,6 +63,7 @@ import { attachTaskSession, type RawRequestChannel } from "./mcp-tasks.ts";
 import type { TaskEnabledSession } from "@modelcontextprotocol/ext-tasks/client";
 import {
   interpolateEnvVars,
+  expandHomePath,
   resolveBearerToken,
   resolveCommandSecret,
   resolveCommandSecretsRecord,
@@ -1050,8 +1051,8 @@ export class McpServerManager {
       let args = literalArgs
         ? [...(definition.args ?? [])]
         : (definition.args ?? []).map((argument) => interpolateEnvVars(argument));
-      args = args.map((argument) => resolveConfigPath(argument) ?? argument);
-      const cwd = (literalCwd ? definition.cwd : resolveConfigPath(definition.cwd)) ?? this.defaultCwd;
+      args = args.map((argument) => expandHomePath(argument) ?? argument);
+      const cwd = (literalCwd ? expandHomePath(definition.cwd) : resolveConfigPath(definition.cwd)) ?? this.defaultCwd;
       if (definition.pluginDataDir) mkdirSync(definition.pluginDataDir, { recursive: true });
       if (cwd !== undefined) {
         const cwdStats = statSync(cwd, { throwIfNoEntry: false });
