@@ -52,7 +52,9 @@ describe("OpenCode environment interpolation", () => {
 
   it("expands home-relative paths", () => {
     expect(resolveConfigPath("~/bin/server")).toBe(join(homedir(), "bin", "server"));
-    expect(resolveConfigPath("~\\bin\\server")).toBe(join(homedir(), "bin", "server"));
+    expect(resolveConfigPath("~\\bin\\server")).toBe(
+      process.platform === "win32" ? join(homedir(), "bin", "server") : join(homedir(), "bin\\server"),
+    );
     expect(resolveConfigPath("~/bin/server", { HOME: "/home/test" })).toBe(join(homedir(), "bin", "server"));
   });
 
